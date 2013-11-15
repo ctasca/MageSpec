@@ -37,7 +37,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class DescribeModelCommand extends Command
 {
-    const VALIDATOR = '/^([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)(_[\w]+)?$/';
+    const VALIDATOR = '/^([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-z0-9]+)(_[\w]+)?$/';
 
     protected function configure()
     {
@@ -57,7 +57,7 @@ class DescribeModelCommand extends Command
 The model alias provided doesn't follow the Magento naming conventions.
 Please make sure it looks like the following:
 
-  Vendorname_Modulename/Blockname
+  VendorName_ModuleName/modelname
 
 Please pay attention to words case
 ERR;

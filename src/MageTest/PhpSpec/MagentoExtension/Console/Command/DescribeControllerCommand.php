@@ -37,7 +37,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class DescribeControllerCommand extends Command
 {
-    const VALIDATOR = '/^([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)$/';
+    const VALIDATOR = '/^([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-z-9]+)$/';
 
     protected function configure()
     {
@@ -56,7 +56,7 @@ class DescribeControllerCommand extends Command
 The controller alias provided doesn't follow the Magento naming conventions.
 Please make sure it looks like the following:
 
-  Vendorname_Modulename/Blockname
+  VendorName_ModuleName/controllername
 
 Please pay attention to words case
 ERR;
