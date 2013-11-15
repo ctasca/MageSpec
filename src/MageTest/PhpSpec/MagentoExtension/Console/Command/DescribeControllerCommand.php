@@ -56,9 +56,11 @@ class DescribeControllerCommand extends Command
 The controller alias provided doesn't follow the Magento naming conventions.
 Please make sure it looks like the following:
 
-  VendorName_ModuleName/controllername
+  vendorname_modulename/controllername
 
-Please pay attention to words case
+The lowercase convention is used because it reflects the best practice
+convention within the Magento community. This reflects the identifier that
+you would pass to the router in config.xml.
 ERR;
             throw new \InvalidArgumentException($message);
         }
@@ -69,6 +71,6 @@ ERR;
         $classname = 'controller:' . $model;
         $resource  = $container->get('locator.resource_manager')->createResource($classname);
 
-        $container->get('code_generator')->generate($resource, 'specification');
+        $container->get('code_generator')->generate($resource, 'controller_specification');
     }
 }
