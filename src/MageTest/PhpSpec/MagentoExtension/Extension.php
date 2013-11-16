@@ -38,10 +38,10 @@ use MageTest\PhpSpec\MagentoExtension\Locator\Magento\ResourceModelLocator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\ResourceModelGenerator;
 
 use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeBlockCommand;
-use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeSuiteBlockCommand;
 use MageTest\PhpSpec\MagentoExtension\Locator\Magento\BlockLocator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\BlockGenerator;
 
+use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeSuiteBlockCommand;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\SuiteBlockGenerator;
 use MageTest\PhpSpec\MagentoExtension\Locator\Magento\SuiteBlockLocator;
 
@@ -99,7 +99,7 @@ class Extension implements ExtensionInterface
                 $c->get('code_generator.templates')
             );
         });
-
+        
         $container->setShared('console.commands.describe_suiteblock', function ($c) {
             return new DescribeSuiteBlockCommand();
         });
@@ -180,7 +180,7 @@ class Extension implements ExtensionInterface
                 }
             );
 
-            $c->setShared('locator.locators.suite_block_locator',
+            $c->setShared('locator.locators.block_locator',
                 function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new SuiteBlockLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
