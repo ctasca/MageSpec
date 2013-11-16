@@ -26,18 +26,20 @@ use PhpSpec\Locator\ResourceLocatorInterface;
 use PhpSpec\Util\Filesystem;
 
 /**
- * BlockLocator
+ * ModelLocator
  *
  * @category   MageTest
  * @package    PhpSpec_MagentoExtension
  *
  * @author     MageTest team (https://github.com/MageTest/MageSpec/contributors)
  */
-class SuiteBlockLocator implements ResourceLocatorInterface
+class SuiteModelLocator implements ResourceLocatorInterface
 {
     const LOCAL_CODE_POOL = 'local';
-    const CLASS_TYPE = 'Block';
-    const VALIDATOR = '/^(block):([a-zA-Z0-9]+)_([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-z0-9]+)(_[\w]+)?$/';
+
+    const CLASS_TYPE = 'Model';
+
+    const VALIDATOR = '/^(model):([a-zA-Z0-9]+)_([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-z0-9]+)(_[\w]+)?$/';
 
     private $srcPath;
     private $specPath;
@@ -51,6 +53,7 @@ class SuiteBlockLocator implements ResourceLocatorInterface
                                 $srcPath = 'src', $specPath = 'spec', Filesystem $filesystem = null)
     {
         $this->filesystem = $filesystem ? : new Filesystem;
+
         $this->srcPath       = rtrim(realpath($srcPath), '/\\') . DIRECTORY_SEPARATOR . self::LOCAL_CODE_POOL . DIRECTORY_SEPARATOR;
         $this->specPath      = rtrim(realpath($specPath), '/\\') . DIRECTORY_SEPARATOR . self::LOCAL_CODE_POOL . DIRECTORY_SEPARATOR;
         $this->srcNamespace  = ltrim(trim($srcNamespace, ' \\') . '\\', '\\');
@@ -150,7 +153,7 @@ class SuiteBlockLocator implements ResourceLocatorInterface
         $validator = $validator   = self::VALIDATOR;
         preg_match($validator, $classname, $matches);
 
-        if (!empty($matches)) {
+            if (!empty($matches)) {
             array_shift($matches);
             array_shift($matches);
 
@@ -158,37 +161,17 @@ class SuiteBlockLocator implements ResourceLocatorInterface
             $suite = ucfirst(array_shift($matches));
             $module = ucfirst(array_shift($matches));
 
-            $block = implode('_', array_map('ucfirst', explode('_', implode($matches))));
+            $model = implode('_', array_map('ucfirst', explode('_', implode($matches))));
 
-            $classname = implode('_', array($vendor, $suite, $module, self::CLASS_TYPE, $block));
+            $classname = implode('_', array($vendor, $suite, $module, self::CLASS_TYPE, $model));
         }
 
-        return new SuiteBlockResource(explode('_', $classname), $this);
-    }
-
-    public function createSuiteResource($classname)
-    {
-        $validator = self::SUITE_VALIDATOR;
-        preg_match($validator, $classname, $matches);
-
-        if (!empty($matches)) {
-            array_shift($matches);
-            array_shift($matches);
-
-            $vendor = ucfirst(array_shift($matches));
-            $module = ucfirst(array_shift($matches));
-
-            $block = implode('_', array_map('ucfirst', explode('_', implode($matches))));
-
-            $classname = implode('_', array($vendor, $module, self::CLASS_TYPE, $block));
-        }
-
-        return new BlockResource(explode('_', $classname), $this);
+        return new SuiteModelResource(explode('_', $classname), $this);
     }
 
     public function getPriority()
     {
-        return 30;
+        return 40;
     }
 
     protected function findSpecResources($path)
@@ -222,12 +205,12 @@ class SuiteBlockLocator implements ResourceLocatorInterface
         $relative = substr($path, strlen($this->fullSpecPath), -4);
         $relative = preg_replace('/Spec$/', '', $relative);
 
-        return new BlockResource(explode(DIRECTORY_SEPARATOR, $relative), $this);
+        return new ModelResource(explode(DIRECTORY_SEPARATOR, $relative), $this);
     }
 
     private function isSupported($file)
     {
-        if (strpos($file, 'Block') > 0) {
+        if (strpos($file, 'Model') > 0) {
             return true;
         }
 

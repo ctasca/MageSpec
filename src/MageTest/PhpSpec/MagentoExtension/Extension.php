@@ -33,6 +33,10 @@ use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeModelCommand;
 use MageTest\PhpSpec\MagentoExtension\Locator\Magento\ModelLocator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\ModelGenerator;
 
+use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeSuiteModelCommand;
+use MageTest\PhpSpec\MagentoExtension\Locator\Magento\SuiteModelLocator;
+use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\SuiteModelGenerator;
+
 use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeResourceModelCommand;
 use MageTest\PhpSpec\MagentoExtension\Locator\Magento\ResourceModelLocator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\ResourceModelGenerator;
@@ -77,6 +81,17 @@ class Extension implements ExtensionInterface
             );
         });
 
+        $container->setShared('console.commands.describe_suitemodel', function ($c) {
+            return new DescribeSuiteModelCommand();
+        });
+
+        $container->setShared('code_generator.generators.mage_suitemodel', function($c) {
+            return new SuiteModelGenerator(
+                $c->get('console.io'),
+                $c->get('code_generator.templates')
+            );
+        });
+
         $container->setShared('console.commands.describe_resource_model', function ($c) {
             return new DescribeResourceModelCommand();
         });
@@ -91,7 +106,6 @@ class Extension implements ExtensionInterface
         $container->setShared('console.commands.describe_block', function ($c) {
             return new DescribeBlockCommand();
         });
-
 
         $container->setShared('code_generator.generators.mage_block', function($c) {
             return new BlockGenerator(
@@ -165,6 +179,12 @@ class Extension implements ExtensionInterface
             $c->setShared('locator.locators.model_locator',
                 function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new ModelLocator($srcNS, $specPrefix, $srcPath, $specPath);
+                }
+            );
+
+            $c->setShared('locator.locators.model_locator',
+                function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
+                    return new SuiteModelLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
             );
 

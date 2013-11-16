@@ -28,37 +28,40 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
- * DescribeBlockCommand
+ * DescribeModelCommand
  *
  * @category   MageTest
  * @package    PhpSpec_MagentoExtension
  *
  * @author     MageTest team (https://github.com/MageTest/MageSpec/contributors)
  */
-class DescribeSuiteBlockCommand extends Command
+class DescribeSuiteModelCommand extends Command
 {
     const VALIDATOR = '/^([a-zA-Z0-9]+)_([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-z0-9]+)(_[\w]+)?$/';
 
     protected function configure()
     {
         $this
-            ->setName('describe:suiteblock')
-            ->setDescription('Describe a Magento Suite Block specification')
-            ->addArgument('block_alias', InputArgument::REQUIRED, 'Magento Block alias to be described');
+            ->setName('describe:suitemodel')
+            ->setDescription('Describe a Magento Suite Model specification')
+            ->addArgument('model_alias', InputArgument::REQUIRED, 'Magento Suite Model alias to be described')
+            ->addOption('community', null, InputOption::VALUE_NONE, 'If set the specification will be created in the community code pool');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $block = $input->getArgument('block_alias');
+        $model = $input->getArgument('model_alias');
 
-        if ((bool) preg_match(self::VALIDATOR, $block) === false) {
+        if ((bool) preg_match(self::VALIDATOR, $model) === false) {
             $message = <<<ERR
-The block alias provided doesn't follow the Magento naming conventions.
+The model alias provided doesn't follow the Magento naming conventions.
 Please make sure it looks like the following:
 
-  vendorname_suitename_modulename/blockname
+  vendorname_suitename_modulename/modelname
 
-Please pay attention to words case
+The lowercase convention is used because it reflects the best practice
+convention within the Magento community. This reflects the identifier that
+you would pass to Mage::getModel() or Mage::getSingleton().
 ERR;
             throw new \InvalidArgumentException($message);
         }
@@ -66,9 +69,8 @@ ERR;
         $container = $this->getApplication()->getContainer();
         $container->configure();
 
-        $classname = 'block:' . $block;
-        $manager = $container->get('locator.resource_manager');
-        $resource  = $manager->createResource($classname);
+        $classname = 'model:' . $model;
+        $resource  = $container->get('locator.resource_manager')->createResource($classname);
 
         $container->get('code_generator')->generate($resource, 'specification');
     }
