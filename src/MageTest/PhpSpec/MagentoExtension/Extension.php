@@ -66,6 +66,11 @@ use MageTest\PhpSpec\MagentoExtension\Locator\Magento\ControllerLocator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\ControllerGenerator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\ControllerSpecificationGenerator;
 
+use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeSuiteControllerCommand;
+use MageTest\PhpSpec\MagentoExtension\Locator\Magento\SuiteControllerLocator;
+use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\SuiteControllerGenerator;
+use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\SuiteControllerSpecificationGenerator;
+
 /**
  * Extension
  *
@@ -99,8 +104,6 @@ class Extension implements ExtensionInterface
                 $c->get('code_generator.templates')
             );
         });
-
-
 
         $container->setShared('console.commands.describe_resource_model', function ($c) {
             return new DescribeResourceModelCommand();
@@ -186,6 +189,24 @@ class Extension implements ExtensionInterface
             );
         });
 
+        $container->setShared('console.commands.describe_suitecontroller', function ($c) {
+            return new DescribeSuiteControllerCommand();
+        });
+
+        $container->setShared('code_generator.generators.mage_controller', function($c) {
+            return new SuiteControllerGenerator(
+                $c->get('console.io'),
+                $c->get('code_generator.templates')
+            );
+        });
+
+        $container->setShared('code_generator.generators.suite_controller_specification', function($c) {
+            return new SuiteControllerSpecificationGenerator(
+                $c->get('console.io'),
+                $c->get('code_generator.templates')
+            );
+        });
+
         $container->setShared('runner.maintainers.varien_subject', function($c) {
             return new VarienSubjectMaintainer(
                 $c->get('formatter.presenter'),
@@ -214,7 +235,7 @@ class Extension implements ExtensionInterface
                 }
             );
 
-            $c->setShared('locator.locators.model_locator',
+            $c->setShared('locator.locators.suite_model_locator',
                 function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new SuiteModelLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
@@ -226,7 +247,7 @@ class Extension implements ExtensionInterface
                 }
             );
 
-            $c->setShared('locator.locators.resource_model_locator',
+            $c->setShared('locator.locators.suite_resource_model_locator',
                 function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new SuiteResourceModelLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
@@ -238,7 +259,7 @@ class Extension implements ExtensionInterface
                 }
             );
 
-            $c->setShared('locator.locators.block_locator',
+            $c->setShared('locator.locators.suite_block_locator',
                 function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new SuiteBlockLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
@@ -250,7 +271,7 @@ class Extension implements ExtensionInterface
                 }
             );
 
-            $c->setShared('locator.locators.helper_locator',
+            $c->setShared('locator.locators.suite_helper_locator',
                 function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new SuiteHelperLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
@@ -259,6 +280,12 @@ class Extension implements ExtensionInterface
             $c->setShared('locator.locators.controller_locator',
                 function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new ControllerLocator($srcNS, $specPrefix, $srcPath, $specPath);
+                }
+            );
+
+            $c->setShared('locator.locators.suite_controller_locator',
+                function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
+                    return new SuiteControllerLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
             );
         });

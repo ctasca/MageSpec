@@ -33,7 +33,7 @@ use PhpSpec\Util\Filesystem;
  *
  * @author     MageTest team (https://github.com/MageTest/MageSpec/contributors)
  */
-class ControllerLocator implements ResourceLocatorInterface
+class ControllerLocator implements ResourceLocatorInterface, SuiteLocatorInterface
 {
     const LOCAL_CODE_POOL = 'local';
 
@@ -169,6 +169,18 @@ class ControllerLocator implements ResourceLocatorInterface
         return 10;
     }
 
+    public function isSuiteLocator($file)
+    {
+        $moduleFile = str_replace($this->getFullSpecPath(), '', $file);
+        $moduleFileParts = explode(DIRECTORY_SEPARATOR, $moduleFile);
+        if (count($moduleFileParts) > 3) {
+            $suitenameChunks = array_chunk($moduleFileParts, 3);
+            $possibleSuitePath = $this->getFullSrcPath() . implode(DIRECTORY_SEPARATOR, $suitenameChunks[0]);
+            return is_file($possibleSuitePath . DIRECTORY_SEPARATOR . 'etc/config.xml');
+        }
+        return false;
+    }
+
     protected function findSpecResources($path)
     {
         if (!$this->filesystem->pathExists($path)) {
@@ -206,7 +218,7 @@ class ControllerLocator implements ResourceLocatorInterface
 
     private function isSupported($file)
     {
-        if (strpos($file, 'controllers') > 0) {
+        if (strpos($file, 'controllers') > 0 && !$this->isSuiteLocator($file)) {
             return true;
         }
 

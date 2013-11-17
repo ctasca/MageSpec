@@ -35,16 +35,16 @@ use Symfony\Component\Console\Input\InputOption;
  *
  * @author     MageTest team (https://github.com/MageTest/MageSpec/contributors)
  */
-class DescribeControllerCommand extends Command
+class DescribeSuiteControllerCommand extends Command
 {
-    const VALIDATOR = '/^([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)$/';
+    const VALIDATOR = '/^([a-zA-Z0-9]+)_([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-z0-9]+)$/';
 
     protected function configure()
     {
         $this
-            ->setName('describe:controller')
-            ->setDescription('Describe a Magento Controller specification')
-            ->addArgument('controller_alias', InputArgument::REQUIRED, 'Magento Controller alias to be described');
+            ->setName('describe:suitecontroller')
+            ->setDescription('Describe a Magento Suite Controller specification')
+            ->addArgument('controller_alias', InputArgument::REQUIRED, 'Magento Suite Controller alias to be described');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -56,7 +56,7 @@ class DescribeControllerCommand extends Command
 The controller alias provided doesn't follow the Magento naming conventions.
 Please make sure it looks like the following:
 
-  vendorname_modulename/controllername
+  vendorname_suitename_modulename/controllername
 
 The lowercase convention is used because it reflects the best practice
 convention within the Magento community. This reflects the identifier that
@@ -71,6 +71,6 @@ ERR;
         $classname = 'controller:' . $model;
         $resource  = $container->get('locator.resource_manager')->createResource($classname);
 
-        $container->get('code_generator')->generate($resource, 'controller_specification');
+        $container->get('code_generator')->generate($resource, 'suite_controller_specification');
     }
 }
