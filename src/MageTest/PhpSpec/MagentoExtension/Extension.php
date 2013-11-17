@@ -53,6 +53,10 @@ use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeHelperCommand;
 use MageTest\PhpSpec\MagentoExtension\Locator\Magento\HelperLocator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\HelperGenerator;
 
+use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeSuiteHelperCommand;
+use MageTest\PhpSpec\MagentoExtension\Locator\Magento\SuiteHelperLocator;
+use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\SuiteHelperGenerator;
+
 use MageTest\PhpSpec\MagentoExtension\Console\Command\DescribeControllerCommand;
 use MageTest\PhpSpec\MagentoExtension\Locator\Magento\ControllerLocator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\ControllerGenerator;
@@ -136,6 +140,17 @@ class Extension implements ExtensionInterface
             );
         });
 
+        $container->setShared('console.commands.describe_suitehelper', function ($c) {
+            return new DescribeSuiteHelperCommand();
+        });
+
+        $container->setShared('code_generator.generators.mage_helper', function($c) {
+            return new SuiteHelperGenerator(
+                $c->get('console.io'),
+                $c->get('code_generator.templates')
+            );
+        });
+
         $container->setShared('console.commands.describe_controller', function ($c) {
             return new DescribeControllerCommand();
         });
@@ -209,6 +224,12 @@ class Extension implements ExtensionInterface
             $c->setShared('locator.locators.helper_locator',
                 function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new HelperLocator($srcNS, $specPrefix, $srcPath, $specPath);
+                }
+            );
+
+            $c->setShared('locator.locators.helper_locator',
+                function($c) use($srcNS, $specPrefix, $srcPath, $specPath) {
+                    return new SuiteHelperLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
             );
 
