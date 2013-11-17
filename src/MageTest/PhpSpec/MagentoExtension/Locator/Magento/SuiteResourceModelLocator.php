@@ -26,20 +26,20 @@ use PhpSpec\Locator\ResourceLocatorInterface;
 use PhpSpec\Util\Filesystem;
 
 /**
- * ModelLocator
+ * EntityResourceLocator
  *
  * @category   MageTest
  * @package    PhpSpec_MagentoExtension
  *
  * @author     MageTest team (https://github.com/MageTest/MageSpec/contributors)
  */
-class SuiteModelLocator implements ResourceLocatorInterface
+class SuiteResourceModelLocator implements ResourceLocatorInterface
 {
     const LOCAL_CODE_POOL = 'local';
 
-    const CLASS_TYPE = 'Model';
+    const CLASS_TYPE = 'Model_Resource';
 
-    const VALIDATOR = '/^(model):([a-zA-Z0-9]+)_([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-z0-9]+)(_[\w]+)?$/';
+    const VALIDATOR = '/^(resource_model):([a-zA-Z0-9]+)_([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-z0-9]+)(_[\w]+)?$/';
 
     private $srcPath;
     private $specPath;
@@ -152,8 +152,7 @@ class SuiteModelLocator implements ResourceLocatorInterface
     {
         $validator = $validator   = self::VALIDATOR;
         preg_match($validator, $classname, $matches);
-
-            if (!empty($matches)) {
+        if (!empty($matches)) {
             array_shift($matches);
             array_shift($matches);
 
@@ -161,17 +160,17 @@ class SuiteModelLocator implements ResourceLocatorInterface
             $suite = ucfirst(array_shift($matches));
             $module = ucfirst(array_shift($matches));
 
-            $model = implode('_', array_map('ucfirst', explode('_', implode($matches))));
+            $resourceModel = implode('_', array_map('ucfirst', explode('_', implode($matches))));
 
-            $classname = implode('_', array($vendor, $suite, $module, self::CLASS_TYPE, $model));
+            $classname = implode('_', array($vendor, $suite, $module, self::CLASS_TYPE, $resourceModel));
         }
 
-        return new SuiteModelResource(explode('_', $classname), $this);
+        return new SuiteResourceModelResource(explode('_', $classname), $this);
     }
 
     public function getPriority()
     {
-        return 40;
+        return 41;
     }
 
     protected function findSpecResources($path)
@@ -205,12 +204,12 @@ class SuiteModelLocator implements ResourceLocatorInterface
         $relative = substr($path, strlen($this->fullSpecPath), -4);
         $relative = preg_replace('/Spec$/', '', $relative);
 
-        return new SuiteModelResource(explode(DIRECTORY_SEPARATOR, $relative), $this);
+        return new SuiteResourceModelResource(explode(DIRECTORY_SEPARATOR, $relative), $this);
     }
 
     private function isSupported($file)
     {
-        if ((strpos($file, 'Model') > 0) && (strpos($file, 'Model/Resource') == 0)) {
+        if (strpos($file, 'Model/Resource') > 0) {
             return true;
         }
 

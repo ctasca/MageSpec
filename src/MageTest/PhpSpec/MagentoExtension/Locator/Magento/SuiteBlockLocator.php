@@ -141,7 +141,7 @@ class SuiteBlockLocator implements ResourceLocatorInterface
 
         return (
             $this->supportsQuery($classname) ||
-            $classname === implode('_', array($parts[0], $parts[1], self::CLASS_TYPE, $parts[count($parts)-1]))
+            $classname === implode('_', array($parts[0], $parts[1], $parts[2], self::CLASS_TYPE, $parts[count($parts)-1]))
         );
     }
 
@@ -164,26 +164,6 @@ class SuiteBlockLocator implements ResourceLocatorInterface
         }
 
         return new SuiteBlockResource(explode('_', $classname), $this);
-    }
-
-    public function createSuiteResource($classname)
-    {
-        $validator = self::SUITE_VALIDATOR;
-        preg_match($validator, $classname, $matches);
-
-        if (!empty($matches)) {
-            array_shift($matches);
-            array_shift($matches);
-
-            $vendor = ucfirst(array_shift($matches));
-            $module = ucfirst(array_shift($matches));
-
-            $block = implode('_', array_map('ucfirst', explode('_', implode($matches))));
-
-            $classname = implode('_', array($vendor, $module, self::CLASS_TYPE, $block));
-        }
-
-        return new BlockResource(explode('_', $classname), $this);
     }
 
     public function getPriority()

@@ -144,7 +144,7 @@ class SuiteHelperLocator implements ResourceLocatorInterface
 
         return (
             $this->supportsQuery($classname) ||
-            $classname === implode('_', array($parts[0], $parts[1], self::CLASS_TYPE, $parts[count($parts)-1]))
+            $classname === implode('_', array($parts[0], $parts[1], $parts[2] ,self::CLASS_TYPE, $parts[count($parts)-1]))
         );
     }
 

@@ -21,7 +21,7 @@
  */
 namespace MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator;
 
-use MageTest\PhpSpec\MagentoExtension\Locator\Magento\ModelResource;
+use MageTest\PhpSpec\MagentoExtension\Locator\Magento\SuiteModelResource;
 use PhpSpec\Console\IO;
 use PhpSpec\CodeGenerator\TemplateRenderer;
 use PhpSpec\CodeGenerator\Generator\GeneratorInterface;
@@ -50,7 +50,7 @@ class SuiteModelGenerator implements GeneratorInterface
 
     public function supports(ResourceInterface $resource, $generation, array $data)
     {
-        return 'class' === $generation && $resource instanceof ModelResource;
+        return 'class' === $generation && $resource instanceof SuiteModelResource;
     }
 
     public function generate(ResourceInterface $resource, array $data = array())
