@@ -166,7 +166,7 @@ class SuiteHelperLocator implements ResourceLocatorInterface, SuiteLocatorInterf
             $classname = implode('_', array($vendor, $suite, $module, self::CLASS_TYPE, $helper));
         }
 
-        return new HelperResource(explode('_', $classname), $this);
+        return new SuiteHelperResource(explode('_', $classname), $this);
     }
 
     public function getPriority()
